@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct BuildRequest {
     /// This parameter is currently optional since no other
     /// distributions are supported.
