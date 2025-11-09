@@ -1,9 +1,13 @@
-use std::hash::Hash;
+use std::sync::Arc;
 
-use axum::{Json, response::IntoResponse};
-use sha2::{Digest, Sha256};
+use axum::{
+    Json,
+    extract::{Extension, State},
+    response::IntoResponse,
+};
 
-use super::build_req::BuildRequest;
+use super::State as APIState;
+use crate::{model::build_req::BuildRequest, storage::Storage};
 
 /// Principle for a build api request:
 /// - receive POST request
@@ -26,14 +30,17 @@ use super::build_req::BuildRequest;
 ///         - for custom rootfs size: `ROOTFS_PARTSIZE={build_request.rootfs_size_mb}`
 /// - copy built image to some storage
 
-#[axum::debug_handler]
-pub async fn create(Json(req): Json<BuildRequest>) -> impl IntoResponse {
+pub async fn create<S: Storage>(
+    State(state): State<Arc<APIState<S>>>,
+    Json(req): Json<BuildRequest>,
+) -> impl IntoResponse {
     if let Err(_err) = req.validate() {
         // return bad request error
         todo!()
     }
 
     let hash = req.req_hash();
+    let stored_build = state.storage.get(hash);
 
     // - lookup cached image build -> return
     // - lookup existing job by label -> return
