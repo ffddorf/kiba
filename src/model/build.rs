@@ -1,6 +1,6 @@
-use std::time;
-
 use serde::{Deserialize, Serialize};
+
+use crate::utils::serde::chrono_human::CustomDateTime;
 
 #[derive(Deserialize, Serialize)]
 pub enum GeneralStatus {
@@ -29,7 +29,7 @@ pub struct Build {
 
     pub detail: GeneralStatus,
     pub imagebuilder_status: BuilderStatus,
-    pub enqueued_at: Option<time::SystemTime>,
+    pub enqueued_at: Option<CustomDateTime>,
 
     pub stdout: Option<String>,
     pub stderr: Option<String>,

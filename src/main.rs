@@ -3,6 +3,7 @@ use kube::Client;
 mod api;
 mod model;
 mod storage;
+mod utils;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
